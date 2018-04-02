@@ -1,0 +1,30 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  border: 0;
+  overflow: hidden;
+  display: block;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.control {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 8px;
+}
+
+button {
+  color: #FFF;
+  cursor: pointer;
+  background-color: #BF7BFF;
+  padding: 8px 13px;
+  border: 0;
+  border-radius: 2px;
+}
+
+button:hover {
+  background-color: #9E43F3;
+}
