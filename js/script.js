@@ -1,14 +1,16 @@
 +function () {
 
-  // Button Elements
+  // Button and Input Elements
   const playEle = document.querySelector('.play');
   const pauseEle = document.querySelector('.pause');
   const gainEle = document.querySelector('.gain');
   const distortionEle = document.querySelector('.distortion');
+  const urssModeEle = document.querySelector('.urss-mode');
 
-  // Canvas and Audio Elements
+  // Canvas, Img and Audio Elements
   const canvasEle = document.querySelector('canvas');
   const audioEle = document.querySelector('audio');
+  const img = document.querySelector('.stalin');
   const canvasCtx = canvasEle.getContext('2d');
 
   // Audio Context and Effects
@@ -26,6 +28,9 @@
   canvasEle.width = window.innerWidth;
   canvasEle.height = window.innerHeight;
 
+  let showImg = false;
+  let backgroundColor = '#222';
+  let barColor = 'rgba(158, 67, 243, $s)';
   const WIDTH = canvasEle.width;
   const HEIGHT = canvasEle.height;
   const bufferLength = analyser.frequencyBinCount;
@@ -37,20 +42,23 @@
     let barHeight;
     const barWidth = (WIDTH / bufferLength) * 2.5;
 
-    canvasCtx.fillStyle = '#222';
+    requestAnimationFrame(draw);
+
+    canvasCtx.fillStyle = backgroundColor;
     canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
     analyser.getByteFrequencyData(dataArray);
+    
+    if (showImg) canvasCtx.drawImage(img, (WIDTH / 2) - (img.width / 2), (HEIGHT / 2) - (img.height / 2));
 
     for (i; i < bufferLength; i++) {
       barHeight = dataArray[i] * 3;
       dataArray[i] = dataArray[i] - 5;
-      canvasCtx.fillStyle = `rgba(158, 67, 243, ${barHeight / 350})`;
 
+      canvasCtx.fillStyle = barColor.replace('$s', barHeight / 350);
       canvasCtx.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight);
+
       x += barWidth + 1;
     }
-
-    requestAnimationFrame(draw);
   }
 
   function makeDistortionCurve(amount) {
@@ -75,6 +83,18 @@
   gainEle.addEventListener('input', () => gain.gain.value = gainEle.value);
 
   distortionEle.addEventListener('input', () => dist.curve = makeDistortionCurve(distortionEle.value));
+
+  urssModeEle.addEventListener('click', () => {
+    const { style } = document.body;
+
+    showImg = true;
+    backgroundColor = '#C00';
+    barColor = 'rgba(255, 215, 0, $s)';
+
+    style.setProperty('--primary-color', '#C00');
+    style.setProperty('--secondary-color', '#FFD700');
+    style.setProperty('--text-color', '#FFD700');
+  });
 
   // Start All
   draw();
